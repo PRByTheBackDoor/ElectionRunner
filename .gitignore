@@ -4,9 +4,6 @@ bin/
 # Compiled documentation
 doc/_build/
 
-# Datasets
-data/
-
 # Output data
 output/
 
