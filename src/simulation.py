@@ -25,9 +25,11 @@
 Run an election simulation.
 """
 
-from models import Party, Constituency, Candidate
+from models import Election
 
-can = Candidate()
-con = Constituency()
-p = Party()
+e = Election()
+
+e.import_csv("../data/election2010.csv")
+
+print e
 

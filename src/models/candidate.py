@@ -27,6 +27,14 @@ class Candidate(object):
     Provides a model for an election candidate.
     """
 
-    def __init__(self):
-        pass
+    def __init__(self, candidateName, partyName, constituencyName):
+        self.name = candidateName
+        self.party = partyName
+        self.constituency = constituencyName
 
+    def set_vote_count(self, voteCount):
+        self.vote_count = voteCount
+
+    def __repr__(self):
+        return "%s (%s): %d" % (self.name, self.party, self.vote_count)
+    

@@ -27,6 +27,20 @@ class Constituency(object):
     Provides a model for a constituency.
     """
 
-    def __init__(self):
-        pass
+    def __init__(self, constituencyName):
+        self.name = constituencyName
+        self.parties = []
+        self.candidates = []
 
+    def add_party(self, party):
+        self.parties.append(party)
+
+    def add_candidate(self, candidate):
+        self.candidates.append(candidate)
+
+    def __repr__(self):
+        out = self.name
+        for c in self.candidates:
+            out = out + "\n    %s" % (c)
+        return out
+    

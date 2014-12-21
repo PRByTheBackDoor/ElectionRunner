@@ -27,6 +27,10 @@ class Party(object):
     Provides a model for a political party.
     """
 
-    def __init__(self):
-        pass
+    def __init__(self, partyName):
+        self.name = partyName
+        self.candidates = []
+
+    def add_candidate(self, candidate):
+        self.candidates.append(candidate)
 

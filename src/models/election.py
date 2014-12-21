@@ -21,6 +21,11 @@
 #   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 #   SOFTWARE.
 
+import csv
+
+from constituency import Constituency
+from party import Party
+from candidate import Candidate
 
 class Election(object):
     """
@@ -28,8 +33,60 @@ class Election(object):
     """
 
     def __init__(self):
-        self.constituencies = []
+        self.constituencies = {}
+        self.parties = {}
+        self.candidates = {}
 
-    def add_constituency(self, c):
-        self.constituencies.append(c)
+
+    def import_csv(self, filename):
+        with open(filename, 'rb') as csvfile:
+            reader = csv.reader(csvfile, delimiter=',', quotechar='"')
+
+            for row in reader:
+                # extract the fields from the CSV data
+                constituencyName = row[0]
+                candidateName = row[1]
+                partyName = row[2]
+                voteCount = int(row[3])
+
+                # reconcile the constituency
+                if not constituencyName in self.constituencies.keys():
+                    con = Constituency(constituencyName)
+                    self.constituencies[constituencyName] = con
+                else:
+                    con = self.constituencies[constituencyName]
+
+                # reconcile the party
+                if not partyName in self.parties.keys():
+                    par = Party(partyName)
+                    self.parties[partyName] = par
+                else:
+                    par = self.parties[partyName]
+
+                # reconcile the candidate
+                if not (candidateName, partyName, constituencyName) in self.candidates.keys():
+                    can = Candidate(candidateName, partyName, constituencyName)
+                    self.candidates[(candidateName, partyName, constituencyName)] = can
+                else:
+                    # candidate with the same name, party and constituency already exists
+                    raise ValueError
+
+                # add the candidate to the constituency
+                con.add_candidate(can)
+
+                # add the candidate to the party
+                par.add_candidate(can)
+
+                # add the party to the constituency
+                con.add_party(par)
+
+                # add the votes to the candidate
+                can.set_vote_count(voteCount)
+
+
+    def __repr__(self):
+        out = "Election()"
+        for c in self.constituencies.values():
+            out = out + "\n%s" % (c)
+        return out
 
