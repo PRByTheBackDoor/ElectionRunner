@@ -22,23 +22,13 @@
 # SOFTWARE.
 
 """
-Models
-======
+Elections
+=========
 
-Provides models for
-  1. A constituency
-  2. A party
-  3. A candidate
-  4. An election
-
-tests
-    Run model unittests
+Provides simulations for different types of election.
 
 """
 
-__all__ = ["Election", "Constituency", "Party", "Candidate"]
+__all__ = ["FPTPElection"]
 
-from election import Election
-from constituency import Constituency
-from party import Party
-from candidate import Candidate
+from fptp_election import FPTPElection

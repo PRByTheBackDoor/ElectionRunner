@@ -21,24 +21,28 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""
-Models
-======
+from models import Election
 
-Provides models for
-  1. A constituency
-  2. A party
-  3. A candidate
-  4. An election
 
-tests
-    Run model unittests
+class FPTPElection(Election):
+    """
+    Provides a simulation of a first past the post (FPTP) election.
+    """
 
-"""
+    def __init__(self):
+        super(FPTPElection, self).__init__()
 
-__all__ = ["Election", "Constituency", "Party", "Candidate"]
+    def run(self):
+        for k, con in self.constituencies.iteritems():
+            maxVote = -1
+            winner = []
+            for can in con.candidates:
+                if can.vote_count > maxVote:
+                    winner = [can]
+                    maxVote = can.vote_count
+                elif can.vote_count == maxVote:
+                    winner.append(can)
 
-from election import Election
-from constituency import Constituency
-from party import Party
-from candidate import Candidate
+            if len(winner) > 1:
+                raise ValueError("Tied vote")
+            con.set_winner(winner[0])

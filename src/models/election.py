@@ -1,31 +1,32 @@
 
-#   The MIT License (MIT)
+# The MIT License (MIT)
 #
-#   Copyright (c) 2014 PRByTheBackDoor
+# Copyright (c) 2014 PRByTheBackDoor
 #
-#   Permission is hereby granted, free of charge, to any person obtaining a copy
-#   of this software and associated documentation files (the "Software"), to deal
-#   in the Software without restriction, including without limitation the rights
-#   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-#   copies of the Software, and to permit persons to whom the Software is
-#   furnished to do so, subject to the following conditions:
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
 #
-#   The above copyright notice and this permission notice shall be included in all
-#   copies or substantial portions of the Software.
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
 #
-#   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-#   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-#   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-#   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-#   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-#   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-#   SOFTWARE.
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
 
 import csv
 
 from constituency import Constituency
 from party import Party
 from candidate import Candidate
+
 
 class Election(object):
     """
@@ -36,7 +37,6 @@ class Election(object):
         self.constituencies = {}
         self.parties = {}
         self.candidates = {}
-
 
     def import_csv(self, filename):
         with open(filename, 'rb') as csvfile:
@@ -50,25 +50,31 @@ class Election(object):
                 voteCount = int(row[3])
 
                 # reconcile the constituency
-                if not constituencyName in self.constituencies.keys():
+                if constituencyName not in self.constituencies.keys():
                     con = Constituency(constituencyName)
                     self.constituencies[constituencyName] = con
                 else:
                     con = self.constituencies[constituencyName]
 
                 # reconcile the party
-                if not partyName in self.parties.keys():
+                if partyName not in self.parties.keys():
                     par = Party(partyName)
                     self.parties[partyName] = par
                 else:
                     par = self.parties[partyName]
 
                 # reconcile the candidate
-                if not (candidateName, partyName, constituencyName) in self.candidates.keys():
-                    can = Candidate(candidateName, partyName, constituencyName)
-                    self.candidates[(candidateName, partyName, constituencyName)] = can
+                if (candidateName, partyName, constituencyName) \
+                        not in self.candidates.keys():
+                    can = Candidate(candidateName,
+                                    partyName,
+                                    constituencyName)
+                    self.candidates[(candidateName,
+                                     partyName,
+                                     constituencyName)] = can
                 else:
-                    # candidate with the same name, party and constituency already exists
+                    # candidate with the same name, party and constituency
+                    # already exists
                     raise ValueError
 
                 # add the candidate to the constituency
@@ -83,10 +89,8 @@ class Election(object):
                 # add the votes to the candidate
                 can.set_vote_count(voteCount)
 
-
     def __repr__(self):
         out = "Election()"
         for c in self.constituencies.values():
             out = out + "\n%s" % (c)
         return out
-
