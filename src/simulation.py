@@ -84,7 +84,8 @@ class Simulation(object):
 
         for y in years:
             # attempt to find election data
-            filename = "../data/election%d.csv" % (y)
+            path = os.path.dirname(__file__)
+            filename = os.path.join(path, "../data/election%d.csv" % (y))
             if os.path.exists(filename):
 
                 # create the elections
