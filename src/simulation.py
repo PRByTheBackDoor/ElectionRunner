@@ -25,13 +25,93 @@
 Run an election simulation.
 """
 
+import argparse
+import re
+import os
+
 from elections import FPTPElection
 
-e = FPTPElection()
 
-e.import_csv("../data/election2010.csv")
+class Simulation(object):
+    """
+    Class to run an election simulation.
+    """
 
-e.run()
+    def __init__(self):
+        """
+        Initialise the simulator.
+        """
 
-for con in e.constituencies.values():
-    print con.winner
+        parser = argparse.ArgumentParser("Simulate general elections")
+        parser.add_argument("years", nargs="*",
+                            help="election years to run the simulation for \
+                                                        (can be a range)")
+        parser.add_argument("-v", "--verbose", action="store_true",
+                            help="increase output verbosity")
+        args = parser.parse_args()
+
+        years = []
+        if not args.years:
+            years = range(0, 9999)
+        else:
+            for y in args.years:
+                # attempt to match a year
+                match = re.match('^(\d{4})$', y.strip())
+                if match is not None:
+                    years.append(int(y))
+                    continue
+
+                # attempt to match a year range
+                match = re.match('^(\d{4})-(\d{4})$', y.strip())
+                if match is not None:
+                    start = int(match.group(1))
+                    end = int(match.group(2))
+
+                    if start >= end:
+                        raise ValueError("Invalid year range: %s"
+                                         % (y.strip()))
+
+                    years.extend(range(start, end+1))
+
+        # uniquify and sort the list of years
+        years = list(set(years))
+        years.sort()
+
+        # TODO: these should be generator functions
+        election_types = ["FPTP"]
+
+        self.elections = []
+
+        for y in years:
+            # attempt to find election data
+            filename = "../data/election%d.csv" % (y)
+            if os.path.exists(filename):
+
+                # create the elections
+                for t in election_types:
+                    # XXX:
+                    e = FPTPElection()
+                    e.import_csv(filename)
+
+                    self.elections.append(e)
+
+        if len(self.elections) == 0:
+            print "No election data found for the specified years"
+            exit(2)
+
+    def run(self):
+        """
+        Run all the elections.
+        """
+
+        for e in self.elections:
+            e.run()
+
+            for con in e.constituencies.values():
+                print "%s\n    %s" % (con.name, con.winner)
+
+
+if __name__ == "__main__":
+    s = Simulation()
+
+    s.run()
