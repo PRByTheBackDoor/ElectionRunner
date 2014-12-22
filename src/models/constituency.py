@@ -44,7 +44,7 @@ class Constituency(object):
 
         self.winner = candidate
 
-    def __repr__(self):
+    def __str__(self):
         out = self.name
         for c in self.candidates:
             out = out + "\n    %s" % (c)

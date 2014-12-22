@@ -50,14 +50,14 @@ class Election(object):
                 voteCount = int(row[3])
 
                 # reconcile the constituency
-                if constituencyName not in self.constituencies.keys():
+                if constituencyName not in self.constituencies:
                     con = Constituency(constituencyName)
                     self.constituencies[constituencyName] = con
                 else:
                     con = self.constituencies[constituencyName]
 
                 # reconcile the party
-                if partyName not in self.parties.keys():
+                if partyName not in self.parties:
                     par = Party(partyName)
                     self.parties[partyName] = par
                 else:
@@ -65,17 +65,17 @@ class Election(object):
 
                 # reconcile the candidate
                 if (candidateName, partyName, constituencyName) \
-                        not in self.candidates.keys():
+                        not in self.candidates:
                     can = Candidate(candidateName,
                                     partyName,
-                                    constituencyName)
+                                    constituencyName,
+                                    voteCount)
                     self.candidates[(candidateName,
                                      partyName,
                                      constituencyName)] = can
                 else:
-                    # candidate with the same name, party and constituency
-                    # already exists
-                    raise ValueError
+                    raise ValueError(
+                        """A candidate with the same details already exists""")
 
                 # add the candidate to the constituency
                 con.add_candidate(can)
@@ -86,10 +86,7 @@ class Election(object):
                 # add the party to the constituency
                 con.add_party(par)
 
-                # add the votes to the candidate
-                can.set_vote_count(voteCount)
-
-    def __repr__(self):
+    def __str__(self):
         out = "Election()"
         for c in self.constituencies.values():
             out = out + "\n%s" % (c)
