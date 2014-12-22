@@ -108,7 +108,7 @@ class Simulation(object):
         for e in self.elections:
             e.run()
 
-            for con in e.constituencies.values():
+            for con in e.constituencies.itervalues():
                 print "%s\n    %s" % (con.name, con.winner)
 
 

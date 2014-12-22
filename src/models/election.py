@@ -88,6 +88,6 @@ class Election(object):
 
     def __str__(self):
         out = "Election()"
-        for c in self.constituencies.values():
+        for c in self.constituencies.itervalues():
             out = out + "\n%s" % (c)
         return out
