@@ -29,7 +29,8 @@ import argparse
 import re
 import os
 
-from elections import FPTPElection
+from inputs import election_from_csv
+from systems import SystemFactory
 
 
 class Simulation(object):
@@ -54,22 +55,22 @@ class Simulation(object):
         if not args.years:
             years = range(0, 9999)
         else:
-            for y in args.years:
+            for year in args.years:
                 # attempt to match a year
-                match = re.match('^(\d{4})$', y.strip())
+                match = re.match(r'^(\d{4})$', year.strip())
                 if match is not None:
-                    years.append(int(y))
+                    years.append(int(year))
                     continue
 
                 # attempt to match a year range
-                match = re.match('^(\d{4})-(\d{4})$', y.strip())
+                match = re.match(r'^(\d{4})-(\d{4})$', year.strip())
                 if match is not None:
                     start = int(match.group(1))
                     end = int(match.group(2))
 
                     if start >= end:
                         raise ValueError("Invalid year range: %s"
-                                         % (y.strip()))
+                                         % (year.strip()))
 
                     years.extend(range(start, end+1))
 
@@ -77,26 +78,29 @@ class Simulation(object):
         years = list(set(years))
         years.sort()
 
-        # TODO: these should be generator functions
-        election_types = ["FPTP"]
+        voting_systems = ["FPTPSystem"]
 
-        self.elections = []
+        self.systems = []
 
-        for y in years:
+        for year in years:
             # attempt to find election data
             path = os.path.dirname(__file__)
-            filename = os.path.join(path, "../data/election%d.csv" % (y))
+            filename = os.path.join(path, "../data/election%d.csv" % (year))
             if os.path.exists(filename):
 
                 # create the elections
-                for t in election_types:
-                    # XXX:
-                    e = FPTPElection()
-                    e.import_csv(filename)
+                for system_name in voting_systems:
+                    election = election_from_csv(filename)
 
-                    self.elections.append(e)
+                    try:
+                        sys = SystemFactory.createSystem(system_name, election)
+                    except NameError, error:
+                        print error
+                        exit(2)
 
-        if len(self.elections) == 0:
+                    self.systems.append(sys)
+
+        if len(self.systems) == 0:
             print "No election data found for the specified years"
             exit(2)
 
@@ -105,14 +109,14 @@ class Simulation(object):
         Run all the elections.
         """
 
-        for e in self.elections:
-            e.run()
+        for sys in self.systems:
+            sys.run()
 
-            for con in e.constituencies.itervalues():
+            for con in sys.election.constituencies.values():
                 print "%s\n    %s" % (con.name, con.winner)
 
 
 if __name__ == "__main__":
-    s = Simulation()
+    simulation = Simulation()
 
-    s.run()
+    simulation.run()

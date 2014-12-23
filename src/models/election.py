@@ -21,12 +21,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import csv
-
-from constituency import Constituency
-from party import Party
-from candidate import Candidate
-
 
 class Election(object):
     """
@@ -37,54 +31,6 @@ class Election(object):
         self.constituencies = {}
         self.parties = {}
         self.candidates = {}
-
-    def import_csv(self, filename):
-        with open(filename, 'rb') as csvfile:
-            reader = csv.reader(csvfile, delimiter=',', quotechar='"')
-
-            for row in reader:
-                # extract the fields from the CSV data
-                constituencyName = row[0]
-                candidateName = row[1]
-                partyName = row[2]
-                voteCount = int(row[3])
-
-                # reconcile the constituency
-                if constituencyName not in self.constituencies:
-                    con = Constituency(constituencyName)
-                    self.constituencies[constituencyName] = con
-                else:
-                    con = self.constituencies[constituencyName]
-
-                # reconcile the party
-                if partyName not in self.parties:
-                    par = Party(partyName)
-                    self.parties[partyName] = par
-                else:
-                    par = self.parties[partyName]
-
-                # reconcile the candidate
-                if (candidateName, partyName, constituencyName) \
-                        not in self.candidates:
-                    can = Candidate(candidateName,
-                                    partyName,
-                                    constituencyName,
-                                    voteCount)
-                    self.candidates[(candidateName,
-                                     partyName,
-                                     constituencyName)] = can
-                else:
-                    raise ValueError(
-                        """A candidate with the same details already exists""")
-
-                # add the candidate to the constituency
-                con.add_candidate(can)
-
-                # add the candidate to the party
-                par.add_candidate(can)
-
-                # add the party to the constituency
-                con.add_party(par)
 
     def __str__(self):
         out = "Election()"
