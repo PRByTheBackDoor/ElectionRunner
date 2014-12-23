@@ -21,10 +21,14 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+"""Provides a model for an election."""
+
 
 class Election(object):
-    """
-    Provides a model for an election.
+    """Provides a class to model an election.
+
+    An election consists of constituencies, parties and candidates. Each
+    candidate is associated with precisely one constituency and one party.
     """
 
     def __init__(self):
@@ -34,6 +38,6 @@ class Election(object):
 
     def __str__(self):
         out = "Election()"
-        for c in self.constituencies.itervalues():
-            out = out + "\n%s" % (c)
+        for con in self.constituencies.itervalues():
+            out = out + "\n%s" % (con)
         return out

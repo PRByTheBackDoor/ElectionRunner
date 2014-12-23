@@ -21,27 +21,30 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+"""Provides a model for an election candidate."""
 
 class Candidate(object):
     """
     Provides a model for an election candidate.
     """
 
-    def __init__(self, candidateName, partyName,
-                 constituencyName, voteCount=None):
-        self.name = candidateName
-        self.party = partyName
-        self.constituency = constituencyName
-        self.vote_count = voteCount
+    def __init__(self, candidate_name, party_name,
+                 constituency_name, vote_count=None):
+        self.name = candidate_name
+        self.party = party_name
+        self.constituency = constituency_name
+        self.vote_count = vote_count
 
-    def set_vote_count(self, voteCount):
-        self.vote_count = voteCount
+    def set_vote_count(self, vote_count):
+        """Set the vote count for the candidate.
+        """
+        self.vote_count = vote_count
 
     def __repr__(self):
-        return "Candidate(%s, %s, %s, %s)" % (self.candidateName,
-                                              self.partyName,
-                                              self.constituencyName,
-                                              self.voteCount)
+        return "Candidate(%s, %s, %s, %d)" % (self.name,
+                                              self.party,
+                                              self.constituency,
+                                              self.vote_count)
 
     def __str__(self):
         return "%s (%s): %d" % (self.name, self.party, self.vote_count)
