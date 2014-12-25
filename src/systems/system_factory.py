@@ -52,7 +52,7 @@ class SystemFactory(object):
 
             for cls in classes:
                 if name == cls[0]:
-                    SystemFactory.add_factory(cls[1].Factory())
+                    SystemFactory.add_factory(name, cls[1].Factory())
                     break
             else:
                 raise NameError("'%s' is not a supported voting system" % name)

@@ -64,3 +64,6 @@ class Constituency(object):
         for can in self.candidates:
             out = out + "\n    %s" % (can)
         return out
+
+    def __repr__(self):
+        return "Constituency(%s)" % (self.name)
