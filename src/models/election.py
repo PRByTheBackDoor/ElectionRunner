@@ -50,6 +50,6 @@ class Election(object):
 
     def __str__(self):
         out = "Election()"
-        for con in self.constituencies.itervalues():
+        for con in self.constituencies:
             out = out + "\n%s" % (con)
         return out
