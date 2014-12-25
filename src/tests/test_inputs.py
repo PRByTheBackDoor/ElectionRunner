@@ -54,8 +54,7 @@ class ImportTests(TestCase):
         expected_constituency_names = ["Forthright South",
                                        "Stonecorner",
                                        "Blandbridge"]
-        imported_constituency_names = map(lambda x: x.name,
-                                          el.constituencies)
+        imported_constituency_names = [x.name for x in el.constituencies]
 
         self.assertEqual(set(expected_constituency_names),
                          set(imported_constituency_names))
@@ -64,7 +63,7 @@ class ImportTests(TestCase):
 
         # check that only the expected parties were imported
         expected_party_names = ["C", "Lab", "LD", "UKIP"]
-        imported_party_names = map(lambda x: x.name, el.parties)
+        imported_party_names = [x.name for x in el.parties]
 
         self.assertEqual(set(expected_party_names), set(imported_party_names))
         self.assertEqual(len(el.parties), len(expected_party_names))
@@ -79,20 +78,28 @@ class ImportTests(TestCase):
                                ("Piddling, Grant", 1923),
                                ("Dodge, John", 13398)]
 
-        expected_candidate_names = map(lambda x: x[0], expected_candidates)
-        imported_candidate_names = map(lambda x: x.name, el.candidates)
+        expected_candidate_names = [x[0] for x in expected_candidates]
+        imported_candidate_names = [x.name for x in el.candidates]
 
         self.assertEqual(set(expected_candidate_names),
                          set(imported_candidate_names))
         self.assertEqual(len(el.candidates), len(expected_candidate_names))
 
         # check that the correct vote counts were imported
-        expected_candidate_votes = map(lambda x: x[1], expected_candidates)
-        imported_candidate_votes = map(lambda x: x.vote_count, el.candidates)
+        expected_votes = [x[1] for x in expected_candidates]
+        imported_votes = [x.vote_count for x in el.candidates]
 
-        self.assertEqual(set(expected_candidate_names),
-                         set(imported_candidate_names))
-        self.assertEqual(len(el.candidates), len(expected_candidate_names))
+        self.assertEqual(set(expected_votes),
+                         set(imported_votes))
+        self.assertEqual(len(el.candidates), len(expected_votes))
+
+        expected_candidate_votes = expected_candidates
+        imported_candidate_votes = [(x.name,
+                                     x.vote_count) for x in el.candidates]
+
+        self.assertEqual(set(expected_candidate_votes),
+                         set(imported_candidate_votes))
+        self.assertEqual(len(el.candidates), len(expected_candidate_votes))
 
 
 if __name__ == '__main__':
