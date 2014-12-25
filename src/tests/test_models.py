@@ -21,7 +21,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""Provides unit tests for the ``model'' package."""
+"""Provides unit tests for the ``models'' package."""
 
 from unittest import TestCase, main
 
