@@ -32,9 +32,21 @@ class Election(object):
     """
 
     def __init__(self):
-        self.constituencies = {}
-        self.parties = {}
-        self.candidates = {}
+        self.constituencies = []
+        self.parties = []
+        self.candidates = []
+
+    def add_candidate(self, candidate):
+        """Add a candidate to the election."""
+        assert candidate not in self.candidates
+
+        if candidate.party not in self.parties:
+            self.parties.append(candidate.party)
+
+        if candidate.constituency not in self.constituencies:
+            self.constituencies.append(candidate.constituency)
+
+        self.candidates.append(candidate)
 
     def __str__(self):
         out = "Election()"

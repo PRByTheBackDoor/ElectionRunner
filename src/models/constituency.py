@@ -21,6 +21,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+"""Provides a model for a constituency."""
+
 
 class Constituency(object):
     """
@@ -33,19 +35,32 @@ class Constituency(object):
         self.candidates = []
         self.winner = None
 
-    def add_party(self, party):
-        self.parties.append(party)
+#    def add_party(self, party):
+#        """Add a party to the constituency.
+#        """
+#        assert party not in self.parties
+#
+#        self.parties.append(party)
 
     def add_candidate(self, candidate):
+        """Add a candidate to the constituency.
+        """
+        assert candidate not in self.candidates
+        assert candidate.party not in self.parties
+        assert candidate.constituency is self
+
+        self.parties.append(candidate.party)
         self.candidates.append(candidate)
 
     def set_winner(self, candidate):
-        assert(candidate in self.candidates)
+        """Add a candidate to the constituency.
+        """
+        assert candidate in self.candidates
 
         self.winner = candidate
 
     def __str__(self):
         out = self.name
-        for c in self.candidates:
-            out = out + "\n    %s" % (c)
+        for can in self.candidates:
+            out = out + "\n    %s" % (can)
         return out

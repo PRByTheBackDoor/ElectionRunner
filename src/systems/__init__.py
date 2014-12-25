@@ -31,4 +31,4 @@ Provides simulations for different types of voting system.
 
 __all__ = ["SystemFactory"]
 
-from system_factory import SystemFactory
+from systems.system_factory import SystemFactory

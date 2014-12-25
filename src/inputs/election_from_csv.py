@@ -31,13 +31,17 @@ def election_from_csv(filename):
     Create an Election object from a csv file of election data.
     """
 
-    e = None
+    election = None
 
     with open(filename, 'rb') as csvfile:
         reader = csv.reader(csvfile, delimiter=',', quotechar='"')
 
         # create an Election object
-        e = Election()
+        election = Election()
+
+        constituencies = {}
+        parties = {}
+        candidates = {}
 
         for row in reader:
             # extract the fields from the CSV data
@@ -47,29 +51,29 @@ def election_from_csv(filename):
             voteCount = int(row[3])
 
             # reconcile the constituency
-            if constituencyName not in e.constituencies:
+            if constituencyName not in constituencies:
                 con = Constituency(constituencyName)
-                e.constituencies[constituencyName] = con
+                constituencies[constituencyName] = con
             else:
-                con = e.constituencies[constituencyName]
+                con = constituencies[constituencyName]
 
             # reconcile the party
-            if partyName not in e.parties:
+            if partyName not in parties:
                 par = Party(partyName)
-                e.parties[partyName] = par
+                parties[partyName] = par
             else:
-                par = e.parties[partyName]
+                par = parties[partyName]
 
             # reconcile the candidate
             if (candidateName, partyName, constituencyName) \
-                    not in e.candidates:
+                    not in candidates:
                 can = Candidate(candidateName,
-                                partyName,
-                                constituencyName,
+                                par,
+                                con,
                                 voteCount)
-                e.candidates[(candidateName,
-                              partyName,
-                              constituencyName)] = can
+                candidates[(candidateName,
+                            partyName,
+                            constituencyName)] = can
             else:
                 raise ValueError(
                     """A candidate with the same details already exists""")
@@ -80,7 +84,7 @@ def election_from_csv(filename):
             # add the candidate to the party
             par.add_candidate(can)
 
-            # add the party to the constituency
-            con.add_party(par)
+            # add the candidate to the election
+            election.add_candidate(can)
 
-    return e
+    return election

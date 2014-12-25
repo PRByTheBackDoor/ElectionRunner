@@ -23,16 +23,17 @@
 
 """Provides a model for an election candidate."""
 
+
 class Candidate(object):
     """
     Provides a model for an election candidate.
     """
 
-    def __init__(self, candidate_name, party_name,
-                 constituency_name, vote_count=None):
+    def __init__(self, candidate_name, party,
+                 constituency, vote_count=None):
         self.name = candidate_name
-        self.party = party_name
-        self.constituency = constituency_name
+        self.party = party
+        self.constituency = constituency
         self.vote_count = vote_count
 
     def set_vote_count(self, vote_count):

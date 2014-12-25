@@ -21,7 +21,9 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from system import System
+"""First past the post voting system."""
+
+from systems.system import System
 
 
 class FPTPSystem(System):
@@ -33,20 +35,23 @@ class FPTPSystem(System):
         super(FPTPSystem, self).__init__(election)
 
     def run(self):
-        for k, con in self.election.constituencies.iteritems():
-            maxVote = -1
+        """Run the simulation."""
+
+        for con in self.election.constituencies:
+            max_vote = -1
             winner = []
             for can in con.candidates:
-                if can.vote_count > maxVote:
+                if can.vote_count > max_vote:
                     winner = [can]
-                    maxVote = can.vote_count
-                elif can.vote_count == maxVote:
+                    max_vote = can.vote_count
+                elif can.vote_count == max_vote:
                     winner.append(can)
 
             if len(winner) > 1:
                 raise ValueError("Tied vote")
             con.set_winner(winner[0])
 
-    class Factory:
-        def create(self, e):
-            return FPTPSystem(e)
+    class Factory(object):
+        """Factory to create the system."""
+        def create(self, election):
+            return FPTPSystem(election)

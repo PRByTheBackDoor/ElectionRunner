@@ -75,25 +75,31 @@ class Simulation(object):
                     years.extend(range(start, end+1))
 
         # uniquify and sort the list of years
-        years = list(set(years))
-        years.sort()
+        self.years = list(set(years))
+        self.years.sort()
 
-        voting_systems = ["FPTPSystem"]
+        self.voting_systems = ["FPTPSystem"]
 
         self.systems = []
 
-        for year in years:
+    def initialise(self):
+        """
+        Load data for all the elections.
+        """
+
+        for year in self.years:
             # attempt to find election data
             path = os.path.dirname(__file__)
             filename = os.path.join(path, "../data/election%d.csv" % (year))
             if os.path.exists(filename):
 
                 # create the elections
-                for system_name in voting_systems:
+                for system_name in self.voting_systems:
                     election = election_from_csv(filename)
 
                     try:
-                        sys = SystemFactory.createSystem(system_name, election)
+                        sys = SystemFactory.create_system(system_name,
+                                                          election)
                     except NameError, error:
                         print error
                         exit(2)
@@ -112,11 +118,33 @@ class Simulation(object):
         for sys in self.systems:
             sys.run()
 
-            for con in sys.election.constituencies.values():
+    def output(self):
+        """
+        Produce the required output.
+        """
+
+        for sys in self.systems:
+            con_max = None
+            len_max = 0
+            for con in sys.election.constituencies:
+                if len(con.parties) > len_max:
+                    len_max = len(con.parties)
+                    con_max = [con.name]
+                elif len(con.parties) == len_max:
+                    con_max.append(con.name)
+
                 print "%s\n    %s" % (con.name, con.winner)
+
+            print "%d" % (len_max)
+            for con in con_max:
+                print "%s" % (con)
 
 
 if __name__ == "__main__":
-    simulation = Simulation()
+    SIM = Simulation()
 
-    simulation.run()
+    SIM.initialise()
+
+    SIM.run()
+
+    SIM.output()

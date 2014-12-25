@@ -21,7 +21,13 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-from fptp_system import FPTPSystem
+"""Provides a factory to produce systems."""
+
+import inspect
+import sys
+
+# voting systems
+from systems.fptp_system import FPTPSystem
 
 
 class SystemFactory(object):
@@ -31,18 +37,26 @@ class SystemFactory(object):
 
     factories = {}
 
-    def addFactory(id, systemFactory):
-        SystemFactory.factories.put[id] = systemFactory
-    addFactory = staticmethod(addFactory)
+    def add_factory(name, factory):
+        """Add a subclassed factory to the system factory."""
+        SystemFactory.factories[name] = factory
+    add_factory = staticmethod(add_factory)
 
-    def createSystem(id, *args):
-        if id not in SystemFactory.factories:
-            try:
-                SystemFactory.factories[id] = \
-                    eval(id + '.Factory()')
-            except NameError:
-                raise NameError("'%s' is not a supported voting system" % id)
+    def create_system(name, *args):
+        """Create a new system using the correct factory."""
+        if name not in SystemFactory.factories:
+            classes = inspect.getmembers(sys.modules[__name__],
+                                         lambda x: inspect.isclass(x) and
+                                         x.__module__ !=
+                                         SystemFactory. __module__)
 
-        return SystemFactory.factories[id].create(*args)
+            for cls in classes:
+                if name == cls[0]:
+                    SystemFactory.add_factory(cls[1].Factory())
+                    break
+            else:
+                raise NameError("'%s' is not a supported voting system" % name)
 
-    createSystem = staticmethod(createSystem)
+        return SystemFactory.factories[name].create(*args)
+
+    create_system = staticmethod(create_system)

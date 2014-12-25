@@ -38,7 +38,7 @@ tests
 
 __all__ = ["Election", "Constituency", "Party", "Candidate"]
 
-from election import Election
-from constituency import Constituency
-from party import Party
-from candidate import Candidate
+from models.election import Election
+from models.constituency import Constituency
+from models.party import Party
+from models.candidate import Candidate

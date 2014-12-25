@@ -21,6 +21,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+"""Virtual base class for voting system simulators."""
+
 
 class System(object):
     """
@@ -31,4 +33,5 @@ class System(object):
         self.election = election
 
     def run(self):
+        """Run the election."""
         raise NotImplementedError("Instantiate a child class")

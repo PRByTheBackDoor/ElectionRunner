@@ -21,6 +21,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+"""Provides a model for a political party."""
+
 
 class Party(object):
     """
@@ -32,4 +34,13 @@ class Party(object):
         self.candidates = []
 
     def add_candidate(self, candidate):
+        """Add candidate to a political party."""
+        assert candidate not in self.candidates
+
         self.candidates.append(candidate)
+
+    def __repr__(self):
+        return "Party(%s)" % (self.name)
+
+    def __str__(self):
+        return "%s" % (self.name)
