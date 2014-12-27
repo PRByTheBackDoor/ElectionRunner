@@ -34,8 +34,17 @@ from systems import SystemFactory
 
 
 class Simulation(object):
-    """
-    Class to run an election simulation.
+    """Class to run an election simulation.
+
+    The simulation starts with an Election() object, comprising Candidate(),
+    Constituency() and Party() objects arranged in a heirarchy.
+
+    A voting system is applied to the Election() object to produce an Outcome()
+    object.
+
+    Statistics are calculated from the Election() and Outcome() objects.
+
+    Finally, the statistics are output in the selected format.
     """
 
     def __init__(self):
@@ -81,6 +90,7 @@ class Simulation(object):
         self.voting_systems = ["FPTPSystem"]
 
         self.systems = []
+        self.outcomes = []
 
     def initialise(self):
         """
@@ -116,7 +126,7 @@ class Simulation(object):
         """
 
         for sys in self.systems:
-            sys.run()
+            self.outcomes.append(sys.run())
 
     def output(self):
         """
@@ -133,11 +143,13 @@ class Simulation(object):
                 elif len(con.parties) == len_max:
                     con_max.append(con.name)
 
-                print "%s\n    %s" % (con.name, con.winner)
-
             print "%d" % (len_max)
             for con in con_max:
                 print "%s" % (con)
+
+        for outcome in self.outcomes:
+            for can in outcome.winners:
+                print "%s\n    %s" % (can.constituency.name, can)
 
 
 if __name__ == "__main__":

@@ -24,6 +24,7 @@
 """First past the post voting system."""
 
 from systems.system import System
+from models.outcome import Outcome
 
 
 class FPTPSystem(System):
@@ -37,6 +38,8 @@ class FPTPSystem(System):
     def run(self):
         """Run the simulation."""
 
+        outcome = Outcome()
+
         for con in self.election.constituencies:
             max_vote = -1
             winner = []
@@ -49,7 +52,9 @@ class FPTPSystem(System):
 
             if len(winner) > 1:
                 raise ValueError("Tied vote")
-            con.set_winner(winner[0])
+            outcome.add_winner(winner[0])
+
+        return outcome
 
     class Factory(object):
         """Factory to create the system."""

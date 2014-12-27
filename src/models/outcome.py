@@ -21,26 +21,28 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""
-Models
-======
+"""The ourcome of an election."""
 
-Provides models for
-  1. A constituency
-  2. A party
-  3. A candidate
-  4. An election
-  5. An election outcome
 
-tests
-    Run model unittests
+class Outcome(object):
+    """
+    Provides a model for an election outcome.
+    """
 
-"""
+    def __init__(self):
+        self.winners = []
 
-__all__ = ["Election", "Constituency", "Party", "Candidate", "Outcome"]
+    def add_winner(self, candidate):
+        """Add a winning candidate to the election outcome."""
+        assert candidate not in self.winners
 
-from models.election import Election
-from models.constituency import Constituency
-from models.party import Party
-from models.candidate import Candidate
-from models.outcome import Outcome
+        self.winners.append(candidate)
+
+    def __repr__(self):
+        return "Outcome(%s)" % (self.winners)
+
+    def __str__(self):
+        out = "Outcome()"
+        for can in self.winners:
+            out = out + "\n%s" % (can)
+        return out

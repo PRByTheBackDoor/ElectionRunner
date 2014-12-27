@@ -33,7 +33,6 @@ class Constituency(object):
         self.name = constituencyName
         self.parties = []
         self.candidates = []
-        self.winner = None
 
 #    def add_party(self, party):
 #        """Add a party to the constituency.
@@ -51,13 +50,6 @@ class Constituency(object):
 
         self.parties.append(candidate.party)
         self.candidates.append(candidate)
-
-    def set_winner(self, candidate):
-        """Add a candidate to the constituency.
-        """
-        assert candidate in self.candidates
-
-        self.winner = candidate
 
     def __str__(self):
         out = self.name

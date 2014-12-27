@@ -25,7 +25,7 @@
 
 from unittest import TestCase, main
 
-from models import Election, Constituency, Party, Candidate
+from models import Election, Constituency, Party, Candidate, Outcome
 
 
 class ElectionTests(TestCase):
@@ -124,6 +124,38 @@ class ConstituencyTests(TestCase):
         with self.assertRaises(AssertionError):
             con.add_candidate(candidate4)
         self.assertEqual(len(con.candidates), 2)
+
+
+class OutcomeTests(TestCase):
+    """Test all public functions provided by the Outcome() class."""
+
+    def setUp(self):
+        pass
+
+    def test_add_winner(self):
+        """Test the public ``add_winner'' function provided by the
+        Outcome() class.
+        """
+
+        con = Constituency("test")
+        con2 = Constituency("test2")
+
+        party1 = Party("party1")
+        party2 = Party("party2")
+
+        candidate1 = Candidate("candidate1", party1, con)
+        candidate2 = Candidate("candidate2", party2, con2)
+
+        outcome = Outcome()
+
+        outcome.add_winner(candidate1)
+
+        self.assertEqual(len(outcome.winners), 1)
+        self.assertTrue(candidate1 in outcome.winners)
+
+        # attempt to add the same candidate
+        with self.assertRaises(AssertionError):
+            outcome.add_winner(candidate1)
 
 
 if __name__ == '__main__':
